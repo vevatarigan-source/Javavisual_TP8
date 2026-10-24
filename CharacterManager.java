@@ -1,34 +1,16 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class CharacterManager {
+    private final ArrayList<Character> characters = new ArrayList<>();
 
-    private final ArrayList<Character> characters;
-
-    public CharacterManager() {
-        characters = new ArrayList<>();
-    }
-
-    public void addCharacter(Character character) {
-        if (character == null) {
-            System.out.println("Karakter tidak boleh null.");
-            return;
-        }
-
-        if (findByName(character.getName()) != null) {
-            System.out.println(
-                "Karakter dengan nama "
-                + character.getName()
-                + " sudah ada."
-            );
-            return;
+    public boolean addCharacter(Character character) {
+        if (character == null || findByName(character.getName()) != null) {
+            return false;
         }
 
         characters.add(character);
-
-        System.out.println(
-            "Karakter " + character.getName()
-            + " berhasil ditambahkan."
-        );
+        return true;
     }
 
     public Character findByName(String name) {
@@ -37,7 +19,7 @@ public class CharacterManager {
         }
 
         for (Character character : characters) {
-            if (character.getName().equalsIgnoreCase(name)) {
+            if (character.getName().equalsIgnoreCase(name.trim())) {
                 return character;
             }
         }
@@ -48,27 +30,36 @@ public class CharacterManager {
     public boolean removeCharacter(String name) {
         Character character = findByName(name);
 
-        if (character != null) {
-            characters.remove(character);
-            System.out.println(
-                "Karakter " + name + " berhasil dihapus."
-            );
-            return true;
+        if (character == null) {
+            return false;
         }
 
-        System.out.println(
-            "Karakter " + name + " tidak ditemukan."
-        );
-        return false;
+        characters.remove(character);
+        return true;
     }
 
     public int getTotalCharacters() {
         return characters.size();
     }
 
-    public ArrayList<Character> getAllCharacters() {
-        // Mengembalikan salinan, bukan ArrayList asli.
+    /** Mengembalikan salinan daftar agar daftar asli tetap terlindungi. */
+    public List<Character> getAllCharacters() {
         return new ArrayList<>(characters);
+    }
+
+    /** Menghitung rata-rata level semua karakter; 0 jika daftar kosong. */
+    public double getAverageLevel() {
+        if (characters.isEmpty()) {
+            return 0.0;
+        }
+
+        int totalLevel = 0;
+
+        for (Character character : characters) {
+            totalLevel += character.getLevel();
+        }
+
+        return (double) totalLevel / characters.size();
     }
 
     public ArrayList<Character> findByType(CharacterType type) {
@@ -83,35 +74,12 @@ public class CharacterManager {
         return result;
     }
 
-    public int getAverageLevel() {
-        if (characters.isEmpty()) {
-            return 0;
-        }
-
-        int totalLevel = 0;
-
-        for (Character character : characters) {
-            totalLevel += character.getLevel();
-        }
-
-        return totalLevel / characters.size();
-    }
-
-    /**
-     * Mencari karakter dengan attack power tertinggi.
-     *
-     * @return karakter terkuat, atau null jika daftar kosong.
-     */
     public Character findStrongest() {
-        if (characters.isEmpty()) {
-            return null;
-        }
-
-        Character strongest = characters.get(0);
+        Character strongest = null;
 
         for (Character character : characters) {
-            if (character.getAttackPower()
-                    > strongest.getAttackPower()) {
+            if (strongest == null
+                    || character.getAttackPower() > strongest.getAttackPower()) {
                 strongest = character;
             }
         }

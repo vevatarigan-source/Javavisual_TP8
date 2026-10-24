@@ -1,38 +1,27 @@
-
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-
-import javax.swing.*;
-
 public class Main {
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            CharacterManager manager = new CharacterManager();
 
-            JFrame frame = new JFrame("Character Manager");
-            frame.setSize(600, 400);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setLocationRelativeTo(null);
+            manager.addCharacter(
+                new Character("Aragorn", CharacterType.WARRIOR, 5));
+            manager.addCharacter(
+                new Character("Merlin", CharacterType.MAGE, 8));
+            manager.addCharacter(
+                new Character("Legolas", CharacterType.ARCHER, 6));
+            manager.addCharacter(
+                new Character("Gandalf", CharacterType.MAGE, 7));
+            manager.addCharacter(
+                new Character("Thorin", CharacterType.WARRIOR, 10));
 
-            JPanel panel = new JPanel();
-            panel.setLayout(
-                new BoxLayout(panel, BoxLayout.Y_AXIS)
-            );
+            // Periksa apakah data sudah masuk
+            System.out.println("Total karakter: "
+                    + manager.getTotalCharacters());
 
-            panel.add(new JLabel("DAFTAR KARAKTER"));
-            panel.add(new JLabel(
-                "Nama: Aragorn | Tipe: WARRIOR | Level: 5"
-            ));
-            panel.add(new JLabel(
-                "Nama: Merlin | Tipe: MAGE | Level: 8"
-            ));
-            panel.add(new JLabel(
-                "Nama: Legolas | Tipe: ARCHER | Level: 6"
-            ));
-
-            frame.add(panel);
-            frame.setVisible(true);
+            MainWindow window = new MainWindow(manager);
+            window.setVisible(true);
         });
     }
 }
